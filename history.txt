@@ -70,3 +70,67 @@ Two facts worth carrying forward: the copies are one-way with no drift
 detection (pending/0001), and each generalizing agent flagged places where a
 concrete example carried teaching value that a category does not
 (pending/0002).
+
+================================================================================
+#2  Add transactional sender/receiver handover protocol
+================================================================================
+
+[REQUEST]
+Add two generic handover skills to the private repository: a sender-side offer
+and a receiver-side validation/acceptance flow. Preserve the existing
+evidence-first style, update project docs, commit, and push to the default
+branch.
+
+[PROTOCOL]
+Handover is treated as a two-party transaction:
+
+  PREPARE -> VALIDATE -> COMMIT -> POST-COMMIT
+
+The sender remains owner through PREPARE and VALIDATE. A receiver commits the
+transfer only with an explicit effective receipt. The shared vocabulary is:
+
+  modes: TAKEOVER, RELIEF, DELEGATION, ESCALATION, CONSULTATION
+  evidence: OBSERVED, DERIVED, REPORTED, ASSUMED, STALE
+  drift: MATCH, BENIGN DRIFT, ACTION-CHANGING DRIFT,
+         INVALIDATING DRIFT, UNVERIFIABLE
+  dispositions: ACCEPTED, ACCEPTED WITH CONDITIONS, REJECTED
+
+An AFTER_CONDITIONS receipt is deliberately non-effective: the sender remains
+owner until a superseding effective receipt. Material corrections produce a
+new offer revision; receipts bind to the exact offer digest.
+
+[IMPLEMENTED]
+  skills/ctx-handoff/SKILL.md
+    Sender-side PREPARE skill. Refuse-guard floor; mandate and authority
+    boundaries; evidence ledger; one next control action; IF-THEN
+    contingencies; expiry, overlap, and first-checkpoint contract; immutable
+    OFFERED artifact.
+
+  skills/ctx-accept/SKILL.md
+    Receiver-side VALIDATE/COMMIT skill. Exact-revision SHA-256 binding;
+    read-only revalidation; drift matrix; receiver synthesis; explicit
+    disposition and effective time; immutable receipt; notification and
+    post-commit checkpoint record.
+
+  README.md
+    Added both skills, the ownership-transfer composition, and transactional
+    ownership / immutable-audit commitments.
+
+  docs/PROJECT_NOTES.md
+    Distinguished the five sanitized exports from the two repo-native generic
+    skills and recorded the pair's compatibility invariants.
+
+[VALIDATION]
+  - Each new SKILL.md has only name + description frontmatter.
+  - Folder names match skill names; explicit invocation guards are present.
+  - No TODO placeholders remain.
+  - Sender and receiver use identical ownership modes and dispositions.
+  - All required evidence classes and drift classes are present.
+  - OFFERED != ACCEPTED, AFTER_CONDITIONS, exact-offer digest, effective time,
+    and first-checkpoint semantics are stated on both sides.
+  - New skill text is estate-agnostic and contains no access-granting values.
+
+[RESULT]
+The repository now contains seven skills. ctx-save still serializes possible
+future resumption; ctx-handoff offers named responsibility; ctx-accept proves
+fresh state and records whether responsibility actually moved.

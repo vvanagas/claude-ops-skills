@@ -5,12 +5,16 @@ pointer). Update as work lands; do not spawn dated files.
 
 ## 1. What this is
 
-Generalized, publishable copies of five ops skills that run on the origin
-fleet. The live originals stay at `~/.claude/skills/<name>/SKILL.md` on the
-hosts; this repo is the sanitized, estate-agnostic export.
+Five generalized, publishable copies of ops skills that run on the origin
+fleet, plus two generic transactional handover skills designed in this repo.
+The five live originals stay at `~/.claude/skills/<name>/SKILL.md` on the
+hosts; their copies here are the sanitized, estate-agnostic export.
+`ctx-handoff` and `ctx-accept` have no host-bound origin: they form one
+two-party protocol and should be installed, bound, and evolved together.
 
-**The copies are one-way.** This repo is downstream. A fix made here does not
-reach the hosts, and a host edit does not reach here — see §4.
+**The original five copies are one-way.** This repo is downstream for those
+skills. A fix made here does not reach the hosts, and a host edit does not
+reach here — see §4.
 
 ## 2. Why the split, and what was scrubbed
 
@@ -27,6 +31,10 @@ estate paths → `<ops-home>/...`; pinned software versions → generic; and
 **every statement about a real unremediated vulnerability deleted outright**,
 not genericized.
 
+The handover pair was authored estate-agnostically: it contains role and path
+placeholders, no origin-fleet examples, and an explicit rule never to place
+access-granting values in an offer, receipt, or checkpoint.
+
 Verified mechanically before the first push with a forbidden-token regex
 sweep over `skills/` (see `history.txt` #1 for the pattern). Re-run it before
 any future push — it is the gate, not the agents' self-reports.
@@ -41,10 +49,16 @@ stays host-local, tracked only in the local ops git repo.
 ## 4. Gotchas
 
 - **One-way copies, no sync mechanism.** Nothing detects drift between a
-  host's `~/.claude/skills/<name>/SKILL.md` and `skills/<name>/SKILL.md`
-  here. Improving methodology on a host and forgetting this repo (or the
-  reverse) is the expected failure. If the divergence ever matters, decide a
-  direction of truth rather than hand-merging.
+  host's `~/.claude/skills/<name>/SKILL.md` and the original five under
+  `skills/` here. Improving methodology on a host and forgetting this repo
+  (or the reverse) is the expected failure. If the divergence ever matters,
+  decide a direction of truth rather than hand-merging.
+- **The handover pair is one protocol.** Changing modes, evidence classes,
+  drift classes, receipt semantics, or filenames in one skill requires a
+  compatibility review of the other.
+- **Offers are immutable and non-transferring.** `ctx-handoff` leaves
+  ownership with the sender. Only an effective receipt from `ctx-accept`
+  commits transfer; `AFTER_CONDITIONS` does not.
 - **`ctx-save` is unredacted by design.** The published version makes this an
   explicit two-mode contract with a loud warning. Do not "fix" it into
   silently redacting.
