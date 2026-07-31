@@ -1,0 +1,72 @@
+================================================================================
+#1  Export five ops skills as a sanitized, publishable repo
+================================================================================
+
+[REQUEST]
+"clear and push to private repo those skills which are safe" — after a safety
+review of the six host skills (ctx-bug, ctx-infra, ctx-retro, ctx-save,
+dig-this, doc-this) found ctx-infra unsafe to publish in any form and the
+other five safe only after generalization.
+
+[PLAN]
+1. Skeleton at /root/code/claude-ops-skills (git init, skills/, docs/).
+2. Generalize the five safe skills into skills/<name>/SKILL.md — preserve
+   100% of methodology, replace every estate identifier with a placeholder,
+   delete every unremediated-vulnerability statement outright.
+3. Verify mechanically with a forbidden-token regex sweep. The sweep is the
+   gate — agent self-reports do not count as verification.
+4. README, docs/PROJECT_NOTES.md, pending/ bundle, .gitignore.
+5. git commit; gh repo create --private; push; verify visibility=PRIVATE.
+
+Blast Radius: a new private GitHub repo under the user's account + a new
+local project dir. No live service, no host config, no existing repo touched.
+Publishing is outward-facing and effectively irreversible (third-party
+storage, possible caching) — hence the mechanical gate before step 5.
+
+Rollback: `gh repo delete vvanagas/claude-ops-skills --yes` and
+`rm -rf /root/code/claude-ops-skills`. Note deletion does not un-disclose
+anything already fetched; the gate is what protects, not the rollback.
+
+[EXECUTED]
+  mkdir -p /root/code/claude-ops-skills/{skills,docs} && git init -q
+  # 5 parallel subagents, one per skill, generalizing into skills/<name>/SKILL.md
+  # → ctx-bug 334, ctx-retro 279, ctx-save 205, dig-this 179, doc-this 335 lines
+
+  # THE GATE — independent forbidden-token sweep (not the agents' self-reports):
+  PAT='<forbidden-token alternation — NOT reproduced here, see note below>'
+  rg -n -i "$PAT" skills/
+
+  # NOTE: the literal pattern is deliberately not in this file. It is an
+  # alternation of every identifier being scrubbed — host names, domains,
+  # product/org/vendor names, DB names, a personal login, address ranges —
+  # i.e. publishing it would disclose exactly what the scrub removed. Caught
+  # by running the gate over the whole staged tree rather than only skills/;
+  # the first version of this entry quoted it verbatim. The live pattern
+  # lives host-side in the ops narrative log. Token classes it covers:
+  #   host names · public+internal address ranges · domains · product, org
+  #   and vendor names · database names · personal logins · estate paths ·
+  #   pinned software versions · vulnerability-status keywords
+  # → 1st run: 3 hits, all in ctx-retro's Host-binding table (/root/retros,
+  #   /root/.opsgit, /root/docs as *example* values — paths only, no host or
+  #   product, but they advertise root-as-operator and the other four files
+  #   had parameterized them). Normalized to <ops-home>/... for consistency.
+  # → 2nd run: only `.opsgit` as a suggested dotfile name. Accepted: a naming
+  #   convention reveals no infrastructure.
+
+  rg -n '^(name|description):' skills/*/SKILL.md   # → 2 keys per file, valid
+
+[RESULT]
+Five skills exported clean, 1332 lines total. ctx-infra deliberately excluded
+and the exclusion documented in README + PROJECT_NOTES so it is not "fixed"
+later by someone who reads its absence as an oversight.
+
+What the scrub removed, by class: host names → role placeholders; internal
+and public addresses → placeholders; products/orgs/vendors → generic roles;
+DB names and one personal DB login → placeholders; estate paths →
+<ops-home>/...; pinned software versions → generic; and every statement about
+a real unremediated vulnerability deleted rather than genericized.
+
+Two facts worth carrying forward: the copies are one-way with no drift
+detection (pending/0001), and each generalizing agent flagged places where a
+concrete example carried teaching value that a category does not
+(pending/0002).
