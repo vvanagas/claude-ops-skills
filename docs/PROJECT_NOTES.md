@@ -5,9 +5,9 @@ pointer). Update as work lands; do not spawn dated files.
 
 ## 1. What this is
 
-Six generalized, publishable copies of ops skills that run on the origin
+Seven generalized, publishable copies of ops skills that run on the origin
 fleet, plus two generic transactional handover skills designed in this repo.
-The six live originals stay at `~/.claude/skills/<name>/SKILL.md` on the
+The seven live originals stay at `~/.claude/skills/<name>/SKILL.md` on the
 hosts; their copies here are the sanitized, estate-agnostic export.
 `ctx-internal-bug` additionally bundles its two report templates under
 `skills/ctx-internal-bug/templates/` (generalized copies of the host

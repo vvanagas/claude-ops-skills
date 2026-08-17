@@ -189,3 +189,48 @@ both registers: ctx-internal-bug writes the full-detail internal report
 (light scrub — access-secrets only), ctx-bug ships the deterministically
 redacted external one, and the composition line in the README now reads
 investigate → internal report → external report → retro → park.
+
+================================================================================
+#4  Export ctx-outstanding — the REVIEW member of the ctx-* family
+================================================================================
+
+[REQUEST]
+"also push ctx-outstanding there, same generalization and gate" (paused
+mid-flight for an open-items storage review against the OKF v0.2 spec,
+then resumed with one improvement folded in).
+
+[PLAN]
+1. Generalize the host-bound ctx-outstanding SKILL.md in the established
+   register: Host-binding table (<watchlist-file>, <change-narrative-log>,
+   <ops-git-repo>), estate history/hostnames/job names removed from the
+   WHY comment and the output example, personal login → "the operator".
+2. Fold in the review's outcome before publishing: add-mode now REQUIRES
+   every entry to carry a date or an explicit trigger (the event/condition
+   that makes it actionable) — adopted from the OKF v0.2 Pending-item
+   convention (state/trigger/owner; stale_after as due date). The host
+   original received the same rule in the same change.
+3. README: table row after ctx-save, composition note for the watchlist
+   sweep, "six" → seven host-bound copies. PROJECT_NOTES: counts.
+4. THE GATE: forbidden-token sweep (host-side pattern, unchanged from #3)
+   over the whole staged tree — must be empty.
+5. Commit, push, re-verify on a fresh clone of the remote tree.
+
+[EXECUTED]
+  # authored + generalized on the operator host, staged into the local clone
+  scp -r skills/ctx-outstanding <clone>/skills/
+  git add -A && git diff --cached | rg -n -i "$PAT"   # → 0 hits
+  git commit && git push && re-scan of a fresh shallow clone
+
+[VALIDATION]
+  - Frontmatter is name + description only; folder name matches skill name;
+    explicit invocation guard present; review mode is read-only and the
+    skill never executes the items it tracks.
+  - Gate: 0 hits over the whole staged tree.
+  - Estate-agnostic: no host names, job names, logins, or estate paths;
+    the watchlist location is a Host-binding placeholder.
+
+[RESULT]
+The repository now contains nine skills. The family verbs are complete:
+LOAD stays host-local (deliberately unpublished), doc-this/dig-this
+INVESTIGATE, ctx-internal-bug/ctx-bug/ctx-save SAVE, ctx-retro ANALYZES,
+ctx-outstanding REVIEWS, and the handover pair transfers ownership.

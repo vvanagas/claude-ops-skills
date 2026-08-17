@@ -5,8 +5,8 @@ problem, dig to the code-level root cause, write it up internally, ship a
 redacted report outside, save resumable session state, and transfer active
 ownership through a verifiable two-party handover.
 
-The six host-bound skills are generalized copies of skills that run on a live
-fleet.
+The seven host-bound skills are generalized copies of skills that run on a
+live fleet.
 Every host name, address, product, database and path has been replaced with a
 placeholder — each host-bound skill opens with a **Host binding** table listing
 what to fill in. The two handover skills are generic additions designed around
@@ -22,13 +22,15 @@ the same evidence-first and explicit-boundary conventions.
 | [`ctx-internal-bug`](skills/ctx-internal-bug/SKILL.md) | user | The **internal** sibling of `ctx-bug`: writes a comprehensive, full-diagnostic-detail internal bug report (light scrub — access-secrets only; IPs/hostnames/digests/symbols retained) from an investigation already done this session, using two bundled report templates. Save-only. |
 | [`ctx-retro`](skills/ctx-retro/SKILL.md) | user | Post-hoc retrospective for a change or incident already resolved — reconstructs the change-set from the ops git repo. Analyze-and-save. |
 | [`ctx-save`](skills/ctx-save/SKILL.md) | user | Minimum state to resume work later. **Read its redaction stance before adopting** — the artifact is unredacted by design and host-local. |
+| [`ctx-outstanding`](skills/ctx-outstanding/SKILL.md) | user | The REVIEW member of the family: sweeps the estate's OUTSTANDING watchlist — flags due/overdue date-gated checks, reports open counts, and (on request) closes or adds items. Sole maintainer of the watchlist file; never executes the items. |
 | [`ctx-handoff`](skills/ctx-handoff/SKILL.md) | user | Sender-side PREPARE: writes an immutable, evidence-classed handover offer for a named receiver. The sender remains owner. |
 | [`ctx-accept`](skills/ctx-accept/SKILL.md) | user | Receiver-side VALIDATE/COMMIT: re-runs critical assertions, classifies drift, synthesizes the mandate, and explicitly accepts with an effective time or rejects. |
 
 The operational-documentation path composes as: `doc-this` or `dig-this`
 investigates → `ctx-internal-bug` writes the full-detail internal report →
 `ctx-bug` ships the redacted one out → `ctx-retro` writes the post-mortem →
-`ctx-save` parks the session.
+`ctx-save` parks the session. Between sessions, `ctx-outstanding` sweeps the
+standing watchlist so open items and date-gated checks don't silently age out.
 
 The ownership-transfer path is deliberately separate:
 `ctx-handoff` **offers** → `ctx-accept` **validates and commits or rejects** →
