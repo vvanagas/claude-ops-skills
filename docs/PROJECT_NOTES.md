@@ -5,14 +5,17 @@ pointer). Update as work lands; do not spawn dated files.
 
 ## 1. What this is
 
-Five generalized, publishable copies of ops skills that run on the origin
+Six generalized, publishable copies of ops skills that run on the origin
 fleet, plus two generic transactional handover skills designed in this repo.
-The five live originals stay at `~/.claude/skills/<name>/SKILL.md` on the
+The six live originals stay at `~/.claude/skills/<name>/SKILL.md` on the
 hosts; their copies here are the sanitized, estate-agnostic export.
+`ctx-internal-bug` additionally bundles its two report templates under
+`skills/ctx-internal-bug/templates/` (generalized copies of the host
+templates the live skill points at).
 `ctx-handoff` and `ctx-accept` have no host-bound origin: they form one
 two-party protocol and should be installed, bound, and evolved together.
 
-**The original five copies are one-way.** This repo is downstream for those
+**The exported copies are one-way.** This repo is downstream for those
 skills. A fix made here does not reach the hosts, and a host edit does not
 reach here — see §4.
 
@@ -49,7 +52,7 @@ stays host-local, tracked only in the local ops git repo.
 ## 4. Gotchas
 
 - **One-way copies, no sync mechanism.** Nothing detects drift between a
-  host's `~/.claude/skills/<name>/SKILL.md` and the original five under
+  host's `~/.claude/skills/<name>/SKILL.md` and the exported copies under
   `skills/` here. Improving methodology on a host and forgetting this repo
   (or the reverse) is the expected failure. If the divergence ever matters,
   decide a direction of truth rather than hand-merging.

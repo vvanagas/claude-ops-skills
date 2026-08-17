@@ -134,3 +134,58 @@ new offer revision; receipts bind to the exact offer digest.
 The repository now contains seven skills. ctx-save still serializes possible
 future resumption; ctx-handoff offers named responsibility; ctx-accept proves
 fresh state and records whether responsibility actually moved.
+
+================================================================================
+#3  Export ctx-internal-bug — the internal SAVE sibling of ctx-bug
+================================================================================
+
+[REQUEST]
+"push this internal skill into github repo next to my other skill. verify no
+internal data in skill and templates per se."
+
+[PLAN]
+1. Generalize the host-bound ctx-internal-bug SKILL.md into
+   skills/ctx-internal-bug/SKILL.md in the repo's established register:
+   Host-binding table (7 placeholders), role placeholders for all estate
+   paths, sibling-skill names kept as boundary markers, estate history and
+   named internal incident reports removed from the WHY comment and body.
+2. Bundle its two report templates under skills/ctx-internal-bug/templates/
+   (_bug-report-template.md was already fully generic — copied verbatim;
+   _template_incident_report.md had its lineage incident filenames
+   generalized to failure-mode descriptions and estate paths replaced with
+   the same placeholders the SKILL binds).
+3. README: table row after ctx-bug, composition line now shows the
+   internal→external report order, "original five" → six host-bound copies.
+   PROJECT_NOTES: counts + bundled-templates note.
+4. THE GATE: re-run the forbidden-token sweep over the WHOLE staged tree
+   (pattern kept host-side in the ops narrative log, per #1; extended for
+   this export with the new skill's estate identifiers — host shortnames,
+   two more product names, a personal login, internal incident slugs —
+   never narrowed). Must be empty before commit.
+5. Commit, push, re-verify by scanning the fetched remote tree.
+
+[EXECUTED]
+  # authored + generalized on the operator host, staged into the local clone
+  scp -r skills/ctx-internal-bug <clone>/skills/
+  # gate over the whole staged tree (pattern host-side, extended):
+  git add -A && git diff --cached | rg -n -i "$PAT"   # → 0 hits
+  git commit && git push && re-scan of fresh `gh api` fetch of the tree
+
+[VALIDATION]
+  - Frontmatter is name + description only; folder name matches skill name;
+    explicit invocation guard present ("Use ONLY when the user explicitly
+    invokes /ctx-internal-bug").
+  - Gate: 0 hits over the whole staged tree with the extended pattern.
+  - Estate-agnostic: no host names, addresses, products, database names,
+    logins, incident slugs, or estate paths; templates carry only
+    ‹fill-in› and <placeholder> markers.
+  - The internal/external boundary is stated in both directions: this skill
+    never writes to <reports-dir>; its output must never be handed outside
+    (a /ctx-bug version is produced instead).
+
+[RESULT]
+The repository now contains eight skills. The report family is complete in
+both registers: ctx-internal-bug writes the full-detail internal report
+(light scrub — access-secrets only), ctx-bug ships the deterministically
+redacted external one, and the composition line in the README now reads
+investigate → internal report → external report → retro → park.
