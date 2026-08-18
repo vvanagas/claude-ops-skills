@@ -127,10 +127,14 @@ block (so a future reader can group by session id and pick the newest):
 Then the body. **Mandatory sections (always present, even if short):**
 
 1. **Start state** — what the session began from / the problem or goal.
-2. **End state** — where it stands now, AND the resume pointer: the explicit
-   next action, or `Complete — nothing pending` (this assertion is load-
-   bearing; a resumer relies on it). This section must answer "what do I do
-   next?" — never omit the next-step.
+2. **End state** — where it stands now, split honestly: **GREEN** (done AND
+   verified this session) vs **OWED** (claimed, unverified, or half-done —
+   say so plainly; OWED means OWED). Then the resume pointer: **exactly ONE
+   next action with its done-condition** ("apply X; done when probe Y shows
+   Z"), or `Complete — nothing pending` (this assertion is load-bearing; a
+   resumer relies on it). Further ideas go to Open questions or your
+   open-items list — never as competing next actions. This section must
+   answer "what do I do next?" — never omit the next-step.
 3. **Key decisions + rationale** — each material decision and *why*; include
    rejected alternatives where the reasoning matters.
 4. **Artifacts** — files created/modified/relevant, with paths and one-line

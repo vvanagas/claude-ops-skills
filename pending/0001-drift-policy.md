@@ -30,3 +30,12 @@ Options when this first bites:
 
 Do not hand-merge across the sanitization boundary — that is how a scrubbed
 detail gets re-introduced into the published copy.
+
+---
+
+**2026-08-18 (event log, not a decision):** first real divergence occurred and
+was handled per Option 1 (host is truth): the host-side ctx-save gained a
+sharpened End-state discipline (GREEN-vs-OWED split + exactly ONE next action
+with a done-condition, adopted from an external SessionLog ledger convention),
+proven over four host snapshots, then re-generalized and re-exported here
+through the standard gate. Precedent recorded; the policy question stays open.

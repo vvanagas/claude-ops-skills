@@ -234,3 +234,29 @@ The repository now contains nine skills. The family verbs are complete:
 LOAD stays host-local (deliberately unpublished), doc-this/dig-this
 INVESTIGATE, ctx-internal-bug/ctx-bug/ctx-save SAVE, ctx-retro ANALYZES,
 ctx-outstanding REVIEWS, and the handover pair transfers ownership.
+
+================================================================================
+#5  Re-export: ctx-save End-state discipline (first drift event)
+================================================================================
+
+[REQUEST]
+"anything needs to be pushed to github?" — audit found one host-side skill
+improvement not yet in the published copies.
+
+[PLAN]
+Replace the ctx-save mandatory-section-2 text with the sharpened form
+(GREEN/OWED split, single next action + done-condition), generalized
+("your open-items list" for the estate watchlist reference). Log the event
+in pending/0001 (Option-1 precedent, item stays open). Gate, push, verify.
+
+[EXECUTED]
+  python3 in-place section replace; gate over staged diff; commit; push;
+  fresh shallow clone re-scan.
+
+[VALIDATION]
+  - Change confined to the one section; no estate identifiers introduced.
+  - Gate: 0 hits. Fresh-clone scan: 0 hits.
+
+[RESULT]
+Published ctx-save now carries the ledger discipline its host originals have
+used since 2026-08-17. First host->repo drift handled and logged.
