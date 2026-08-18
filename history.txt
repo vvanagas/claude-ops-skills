@@ -260,3 +260,31 @@ in pending/0001 (Option-1 precedent, item stays open). Gate, push, verify.
 [RESULT]
 Published ctx-save now carries the ledger discipline its host originals have
 used since 2026-08-17. First host->repo drift handled and logged.
+
+================================================================================
+#6  Ship rebuild-index.py with ctx-save (dead reference fixed)
+================================================================================
+
+[REQUEST]
+"that python indexer?" — audit follow-up: the ctx-save Host-binding table
+promised rebuild-index.py "ships alongside", but the repo never shipped it.
+
+[PLAN]
+Generalize the host script (hardcoded context dir -> operates on its own
+directory, argv[1] override; emitted header/pointers derived at runtime),
+smoke-test against a temp store, add as skills/ctx-save/rebuild-index.py,
+update the binding row, gate, push, verify.
+
+[EXECUTED]
+  parameterize + assert no estate paths remain; smoke test (temp store, 1
+  fake context -> correct INDEX.md); gate over staged diff; commit; push;
+  fresh-clone re-scan + compile check.
+
+[VALIDATION]
+  - Script is estate-agnostic (asserted mechanically, not by eye).
+  - Runs on any directory; no dependencies beyond stdlib.
+  - Gate: 0 hits.
+
+[RESULT]
+ctx-save is now installable as documented: SKILL.md + the indexer it
+references, in one directory.

@@ -21,7 +21,7 @@ written in terms of them.
 | `<context-dir>` | Directory the context files and `INDEX.md` live in. Must sit **inside** the tree your ops-git hook (or equivalent snapshotter) covers, and must not be the operator's home dir. | `/var/lib/agent-contexts` |
 | `<transcript-dir>` | Directory holding this agent's session transcripts (`*.jsonl`), used only for the session-id fallback. | `~/.claude/projects/<project-key>` |
 | `<ops-git-dir>` | The local-only ops git repo that auto-commits changes under the tree. | `/var/lib/ops.git` |
-| `<index-script>` | Path to `rebuild-index.py` (ships alongside the context store). | `<context-dir>/rebuild-index.py` |
+| `<index-script>` | Path to `rebuild-index.py` — reference copy ships NEXT TO THIS FILE; install it into `<context-dir>` (it operates on the directory it lives in, or takes the dir as argv[1]). | `<context-dir>/rebuild-index.py` |
 
 ---
 
