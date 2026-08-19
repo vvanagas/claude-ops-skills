@@ -12,3 +12,4 @@ producer extensions. Numbers are creation order and permanent. Closing an item
 
 * [0001 — Decide the drift policy vs the live hosts](0001-drift-policy.md) — copies are one-way with no sync mechanism; decide a direction of truth before the first real divergence.
 * [0002 — Self-review the generalized text for lost meaning](0002-generalization-review.md) — five agents each flagged places where removing specifics cost teaching value; read them end-to-end once with fresh eyes.
+* [0003 — Adapt mirror-check.sh to the policy master/overlays](0003-policy-mirror-check.md) — policy/ has no mechanical drift check yet; reuse the coding-rules mirror/projection scripts before the next master or overlay edit.
