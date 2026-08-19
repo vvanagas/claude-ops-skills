@@ -74,3 +74,33 @@ stays host-local, tracked only in the local ops git repo.
 ## 5. Open items
 
 See [`../pending/index.md`](../pending/index.md).
+
+## 6. policy/ — agent operating policy (added with history.txt #7)
+
+Estate-agnostic abstraction of the fleet global agent-instruction files
+(the CLAUDE.md / AGENTS.md near-mirrors). Structure: a platform-neutral
+`AGENTS.master.md` + `overlays/{posix.md,windows-user.md}` +
+`PLACEHOLDERS.md`. A deployed agent file is a projection: master + platform
+overlay + a PRIVATE estate overlay (never in this repo).
+
+Design decisions:
+- **No duplication of coding-rules.** TDD Iron Law / secrets-in-code /
+  idempotency live canonically in vvanagas/coding-rules; the master points
+  there and carries only what that repo does not (ops-git pattern, workflow
+  protocol, ledger discipline, docs-follow-code, durable capture, OKF,
+  scripting/shell preference). Avoids a 5th synchronized mirror.
+- **[admin] tagging.** Rules presuming host-admin authority are tagged so a
+  restricted overlay can satisfy them within user scope or mark them N/A —
+  silence is not compliance.
+- **windows-user overlay = OS x privilege.** A no-admin Windows box deletes
+  the host-admin half and keeps the portable project-workflow half. Inferred
+  mechanics are marked [unverified] pending validation on a real restricted
+  host (schtasks self-scoped, per-user installers — estate-local caveats the
+  operator fills in).
+
+Gate: same forbidden-token sweep as the skills (v2 estate pattern), run over
+policy/ in scratch AND in-repo — CLEAN. No new token classes were required.
+
+Follow-up (not done): adapt coding-rules `mirror-check.sh` to verify
+master <-> overlay <-> fleet-projection drift mechanically, turning the
+"matched semantic change in both files" habit into a script.

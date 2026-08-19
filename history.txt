@@ -288,3 +288,37 @@ update the binding row, gate, push, verify.
 [RESULT]
 ctx-save is now installable as documented: SKILL.md + the indexer it
 references, in one directory.
+
+#7 policy/ — publish the estate-agnostic agent operating policy (master + platform overlays)
+[REQUEST]
+  Abstract the fleet global agent-instruction files (CLAUDE.md / AGENTS.md)
+  into a public, estate-agnostic policy with a platform-neutral master and
+  per-platform overlays (POSIX-admin + Windows-restricted), homed in this repo.
+
+[PLAN]
+  - policy/AGENTS.master.md: Tier-A invariants verbatim-ish + parameterized
+    Tier-B (ops-git pattern, workflow protocol, secrets-in-operation, OKF,
+    durable capture). TDD/secrets-in-code NOT duplicated — pointer to
+    vvanagas/coding-rules (single canonical source) + mirror-check convention.
+  - policy/overlays/{posix.md,windows-user.md}: bind mechanics; windows-user
+    is the no-admin shape (host-admin half N/A, project-workflow half kept),
+    inferred bits marked [unverified].
+  - policy/PLACEHOLDERS.md: symbolic names ($OPS_GIT_DIR, $NARRATIVE_LOG, ...).
+  - Gate over the whole tree; README pointer; register note in PROJECT_NOTES.
+  Blast Radius: new policy/ dir in this repo only; no skills touched, NO push
+  (local commit for review; publish gate runs before any push).
+  Rollback: git rm -r policy/ (pre-push) or revert the commit.
+
+[EXECUTED]
+  # drafted in scratch, gated, copied into repo:
+  rg -n -i "$PAT" policy/            # -> CLEAN: 0 forbidden tokens (v2 pattern)
+  # scrub classes applied: estate paths -> $PLACEHOLDER / ~ examples; host-admin
+  # assumptions -> [admin] tag so restricted overlay satisfies-or-N/As them;
+  # the fleet dotfile example name -> a neutral ".ops-vcs.git" (the real tail is a gate token).
+
+[RESULT]
+  Four files under policy/, gate-clean in scratch AND in-repo. Local commit
+  made; NOT pushed. Extended token classes for this file: none new required —
+  the v2 estate pattern already covers every identifier the source carried.
+  Open: coding-rules mirror-check.sh could be adapted to verify
+  master<->overlay<->fleet-projection consistency (follow-up, not this commit).

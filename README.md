@@ -12,6 +12,19 @@ placeholder — each host-bound skill opens with a **Host binding** table listin
 what to fill in. The two handover skills are generic additions designed around
 the same evidence-first and explicit-boundary conventions.
 
+## Operating policy
+
+[`policy/`](policy/) holds the estate-agnostic **agent operating policy** these
+skills assume: a platform-neutral [`AGENTS.master.md`](policy/AGENTS.master.md)
+plus overlays for [POSIX-admin](policy/overlays/posix.md) and
+[restricted Windows](policy/overlays/windows-user.md), with symbolic
+[`PLACEHOLDERS.md`](policy/PLACEHOLDERS.md). A deployed agent file is a
+projection of master + a platform overlay + a private estate overlay (not in
+this repo). Production-code invariants (TDD, secrets-in-code) are not
+duplicated here — the master points at
+[coding-rules](https://github.com/vvanagas/coding-rules) as their canonical
+source.
+
 ## The skills
 
 | Skill | Invocation | What it does |
