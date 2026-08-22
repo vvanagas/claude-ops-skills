@@ -481,3 +481,42 @@ the origin host (skill + overlay binding + agent preloads — all read at
 startup, verified next session). Windows projection follows when that file
 adopts the split. Follow-up candidate, not done: coding-rules §12 could
 point at cli-archetypes from its side (cross-repo; separate request).
+
+================================================================================
+#11 "Gates are not negotiable" — standing rule from the operator
+================================================================================
+
+[REQUEST]
+Operator, immediately after a toolchain fix where the dispatch prompt said
+"do not weaken any tsconfig flag": "this 'do not weaken, do not downgrade'
+must be default forever from now on. workarounds - open question."
+
+[PLAN]
+1. Master += "## Gates are not negotiable" (before Scripting preference):
+   fix the CAUSE, never the check; no relaxed flag / loosened assertion /
+   lowered threshold / narrowed pattern / gate switched off; cause unfixable
+   → record the trade-off + revisit trigger in the backlog, never silently.
+   Two clarifications the operator's own case supplies: downgrading a
+   DEPENDENCY to keep a GATE running is the correct inverse (version =
+   variable, gate = constant); a workaround is never the agent's silent
+   call — surface it with its cost, operator decides ("open question").
+2. Projection: same rule, terse.
+3. Memory: feedback entry `gates-not-negotiable` + MEMORY.md line.
+Blast Radius: this repo; the host's next-session policy text. Rollback: revert.
+
+[EXECUTED]
+  perl -0pi -e '<insert before ## Scripting preference>' policy/AGENTS.master.md
+  perl -0pi -e '<same, terse>' policy/projections/linux-posix.md
+  git diff -- policy/ | grep '^+' | grep -v '^+++' | rg -n -i "$PAT"
+  # → no output, exit 1 = CLEAN
+  mirror-check.sh policy/projections/linux-posix.md
+  # → ok linux-posix.md (v0.10, 8 rules mirrored)
+
+[RESULT]
+The rule now travels with every projection instead of living in one
+session's dispatch prompt. Note the deliberate asymmetry it encodes: a
+version pin DOWN to keep a linter running is endorsed, while relaxing a lint
+rule or a type flag to make the same run pass is forbidden — the two look
+similar in a diff and are opposites in intent. Not done (candidate, separate
+repo): vvanagas/coding-rules could carry the same rule in its enforcement
+model, where "[auto] means a red checker IS the violation" already implies it.

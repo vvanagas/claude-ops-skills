@@ -40,6 +40,23 @@ the controls it attaches (exit-code contract, child-output trust boundary,
 bounds, secret masking) are the ones a green test suite structurally does
 not see. The estate installs the corpus's skill so the rule has a mechanism.
 
+## Gates are not negotiable
+
+When a check fails — a linter, a type-strictness flag, a test, a coverage or
+mutation floor, a review model floor — the fix is the CAUSE, never the check.
+Do not relax a strictness flag, loosen or delete an assertion, lower a
+threshold, narrow a pattern, or turn a gate off to make a run go green. If
+the cause genuinely cannot be fixed now, the trade-off is recorded where the
+next person will hit it — a backlog item naming the trigger to revisit — and
+never taken silently.
+
+Downgrading a *dependency* to keep a *gate* running is the correct inverse of
+this rule, not a violation of it: the version is the variable, the gate is
+the constant. Prefer it to shipping with the gate off, and record why.
+
+A workaround — anything that leaves the stated goal unmet while looking done
+— is never the agent's call to make silently. Surface it as a decision with
+its cost and let the operator choose.
 ## Scripting preference
 
 Prefer a typed scripting language with a test runner over shell for anything

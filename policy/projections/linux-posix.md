@@ -17,6 +17,21 @@
 - The estate overlay names every other CLI, its full path, and any
   authentication it carries.
 
+## Gates are not negotiable
+
+A failing check — linter, type-strictness flag, test, coverage/mutation
+floor, review model floor — is fixed at the CAUSE, never by weakening the
+check: no relaxed flag, no loosened or deleted assertion, no lowered
+threshold, no narrowed pattern, no gate switched off to get green. Cause
+unfixable now → record the trade-off where the next person hits it
+(`pending/` item + its revisit trigger); never silently.
+
+Downgrading a *dependency* to keep a *gate* running is the correct inverse —
+the version is the variable, the gate is the constant. Prefer it to shipping
+with the gate off, and say why.
+
+A workaround (stated goal unmet, looks done) is never a silent call: surface
+it with its cost, let the operator decide.
 ## Scripting preference
 
 Prefer **TypeScript (via bun)** over Bash for anything beyond trivial
