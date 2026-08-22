@@ -556,3 +556,48 @@ estate's own habits: the skill's only safeguard for controller rulings is
 reciting them in a final chat message, which is precisely "lost with the
 session". The rule makes the tracked log the primary record and the recital
 a summary of it.
+
+================================================================================
+#13 Promote recurring execution rulings into standing rules (follow, not decide)
+================================================================================
+
+[REQUEST]
+Operator, after the per-project execution log landed: "and I hope some of
+those becomes long term decision not forcing to decide - just follow."
+
+[PLAN]
+Triage the 12 rulings from one execution run: project-specific ones stay in
+that project's docs/adr/log.md; the recurring ones move to where they load
+automatically.
+1. Master + projection, under "Gates are not negotiable": a gate must be
+   COMPLETE (vendoring a rule set = configuring every automatic promotion; a
+   subset silently degrades the rest) and PROVABLY LIVE (a check never seen
+   to fail is not evidence — mutate, watch it fire, restore; a pin nothing
+   enforces is a preference; a control claiming more scope than it has is
+   worse than none).
+2. Host agent definitions (outside this repo, ops-git): implementer.md gains
+   seven standing rules (ledger ships with the code; never `git checkout --`
+   to undo a deliberate break; a probe must target the exact subject; a new
+   check is guilty until proven non-inert; never weaken a check; declaring a
+   bound is not enforcing it; report your own process errors).
+   task-reviewer.md gains six (a control that checks less than it claims is
+   never Minor; prove non-inertness; audit a widening for accidental
+   narrowing; weakening-to-pass is Critical; judge evidence against committed
+   bytes, not the report's claim; an unenforced bound is a finding).
+
+[EXECUTED]
+  perl -0pi -e '<insert into Gates are not negotiable>' policy/AGENTS.master.md
+  perl -0pi -e '<same, terse>' policy/projections/linux-posix.md
+  git diff -- policy/ | grep '^+' | grep -v '^+++' | rg -n -i "$PAT"
+  # → no output, exit 1 = CLEAN
+  mirror-check.sh policy/projections/linux-posix.md
+  # → ok linux-posix.md (v0.10, 8 rules mirrored)
+
+[RESULT]
+The distinction that made the triage work: a ruling belongs in the project's
+log when it settles THIS codebase (which token the self-audit uses, which
+guard the parser needs), and in policy or an agent definition when it would
+otherwise be re-derived on every run (how to prove a check works, where the
+ledger entry goes, what counts as Minor). Agent definitions load at Claude
+Code startup, so the new blocks are live next session — dispatch prompts
+keep carrying them explicitly until then.

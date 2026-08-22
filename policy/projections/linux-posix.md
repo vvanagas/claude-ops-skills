@@ -30,6 +30,14 @@ Downgrading a *dependency* to keep a *gate* running is the correct inverse —
 the version is the variable, the gate is the constant. Prefer it to shipping
 with the gate off, and say why.
 
+**A gate must be complete, and provably live.** Vendoring a rule set means
+configuring EVERY promotion it declares automatic — a subset silently
+degrades the rest to human review while still looking like enforcement. A
+check never seen to FAIL is not evidence: mutate what it guards, watch it
+fire, restore. A rule matching nothing passes forever; a pin nothing enforces
+(no CI, no lockfile check) is a preference; a control claiming more scope than
+it has is worse than none, because everyone downstream believes it.
+
 A workaround (stated goal unmet, looks done) is never a silent call: surface
 it with its cost, let the operator decide.
 ## Scripting preference
