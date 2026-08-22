@@ -674,3 +674,39 @@ permanent rules within minutes, while the orchestrator's became a sentence in
 a session that ends. The triggering instance is in the text — a controller
 commit that swallowed an implementer's staged files, caught and reported by
 the implementer rather than by the controller who caused it.
+
+================================================================================
+#16 A probe written to produce evidence is guilty until proven non-inert too
+================================================================================
+
+[REQUEST]
+Found during a subagent-driven run: an implementer discovered its OWN
+verification helper — `ps -eo pid,comm,args` plus a digit-adjacent regex, used
+to check whether a killed child was really gone — reports "not running"
+regardless of ground truth (the `comm` column renders the name ahead of
+`args`, and fixed-width padding defeats the digit-adjacency assumption). The
+same helper had produced the evidence in an earlier report section, so that
+evidence was inert, not merely thin. It re-ran the claim with a corrected
+method and disclosed that the original proof proved nothing.
+
+[PLAN]
+Extend the existing "a check never seen to fail is not evidence" rule in the
+master + projection to cover probes written to GENERATE evidence, and add the
+concrete instruction: demonstrate the probe returns the POSITIVE for a
+known-true case before trusting its negative. Same addition to
+~/.claude/agents/implementer.md.
+
+[EXECUTED]
+  perl -0pi -e '<extend the gates paragraph>' policy/AGENTS.master.md
+  perl -0pi -e '<same, terse>' policy/projections/linux-posix.md
+  perl -0pi -e '<extend the standing rules>' ~/.claude/agents/implementer.md
+  git diff -- policy/ | grep '^+' | grep -v '^+++' | rg -n -i "$PAT"
+  # → no output, exit 1 = CLEAN
+  mirror-check.sh policy/projections/linux-posix.md
+  # → ok linux-posix.md (v0.10, 8 rules mirrored)
+
+[RESULT]
+The existing rule covered production checks; this covers the instruments used
+to verify them, which is where it bites hardest — an inert probe replaced by
+another inert probe looks identical in a write-up, so the only defence is
+demonstrating the positive case once.

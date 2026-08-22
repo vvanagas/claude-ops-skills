@@ -58,7 +58,11 @@ the constant. Prefer it to shipping with the gate off, and record why.
 configuring every promotion it declares automatic — a subset silently
 degrades the remainder to human review while the config still looks like
 enforcement. And a check that has never been seen to FAIL is not yet
-evidence: mutate what it guards, watch it fire, restore. A rule that matches
+evidence: mutate what it guards, watch it fire, restore. The same applies to a
+probe written to produce evidence — a process check that can never match, a
+log grep that always finds nothing — which returns the reassuring answer
+unconditionally; demonstrate it returns the POSITIVE for a known-true case
+before trusting its negative. A rule that matches
 nothing passes every run forever; a pin with nothing enforcing it (no CI, no
 lockfile check) is a preference, not a constraint; and a control whose stated
 scope exceeds its real scope is worse than an absent one, because everyone

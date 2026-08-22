@@ -34,7 +34,9 @@ with the gate off, and say why.
 configuring EVERY promotion it declares automatic — a subset silently
 degrades the rest to human review while still looking like enforcement. A
 check never seen to FAIL is not evidence: mutate what it guards, watch it
-fire, restore. A rule matching nothing passes forever; a pin nothing enforces
+fire, restore. Same for a probe written to produce evidence (a `ps`
+grep that cannot match, a log check that always finds nothing) — show it
+returns the POSITIVE for a known-true case before trusting its negative. A rule matching nothing passes forever; a pin nothing enforces
 (no CI, no lockfile check) is a preference; a control claiming more scope than
 it has is worse than none, because everyone downstream believes it.
 
