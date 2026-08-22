@@ -20,7 +20,10 @@ plus overlays for [POSIX-admin](policy/overlays/posix.md) and
 [restricted Windows](policy/overlays/windows-user.md), with symbolic
 [`PLACEHOLDERS.md`](policy/PLACEHOLDERS.md). A deployed agent file is a
 projection of master + a platform overlay + a private estate overlay (not in
-this repo). Production-code invariants (TDD, secrets-in-code) are not
+this repo). [`policy/projections/`](policy/projections/) holds rendered
+projections ready to import from `~/.claude/CLAUDE.md` — today
+`linux-posix.md` (host-admin Linux); the private estate overlay binds its
+`$PLACEHOLDERS` and never leaves the host. Production-code invariants (TDD, secrets-in-code) are not
 duplicated here — the master points at
 [coding-rules](https://github.com/vvanagas/coding-rules) as their canonical
 source.

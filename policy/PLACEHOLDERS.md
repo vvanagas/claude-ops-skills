@@ -15,6 +15,8 @@ public tree.
 | `$SCRATCH` | ephemeral scratch dir (never committed) | `/tmp` (or the session scratch dir) | `%TEMP%` |
 | `$PKG_USER` | per-user package installer | `--user` / project venv | per-user installer (see overlay note) |
 | `$REDACT` | names-only redaction idiom for configs | `sed -E 's/(=|: ).*/\1<redacted>/'` | `-replace '(=|: ).*','$1<redacted>'` |
+| `$PENDING_HOST_DIR` | host-level OKF Pending bundle (open items; `index.md` default-read) | `~/docs/outstanding` | `%USERPROFILE%\docs\outstanding` |
+| `$HOST_DOCS` | point-in-time host state / DR / remediation docs | `~/docs` | `%USERPROFILE%\docs` |
 
 Values above are **illustrative defaults**, not an estate's real layout. A
 private estate overlay may override any of them and adds its own bindings

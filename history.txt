@@ -322,3 +322,42 @@ references, in one directory.
   the v2 estate pattern already covers every identifier the source carried.
   Open: coding-rules mirror-check.sh could be adapted to verify
   master<->overlay<->fleet-projection consistency (follow-up, not this commit).
+
+================================================================================
+#8  policy/projections/linux-posix.md — public Linux projection; host imports it
+================================================================================
+
+[REQUEST]
+"I need a place for the linux [CLAUDE.md] which doesn't compete with the
+windows version … curated — no passwords, no host specific. Host specifics
+may live in local overrides … Must be public, maybe new repo? Your take" →
+take: no new repo; a rendered projection here + a private estate overlay on
+the host, composed by Claude Code `@path` imports from ~/.claude/CLAUDE.md.
+
+[PLAN]
+1. policy/projections/linux-posix.md — curated projection of master + posix
+   overlay, all estate identifiers replaced by $PLACEHOLDERS; carries the
+   coding-rules mirror block + its mirror-check stamp.
+2. PLACEHOLDERS.md += $PENDING_HOST_DIR, $HOST_DOCS. Master += "Subagent
+   dispatch — model floors" (generic; both platforms now carry it) and a
+   projections/ deployment note. README policy paragraph += projections.
+3. Gate: forbidden-token sweep over the staged diff (pattern built from the
+   host file's identifiers — host name, home path, internal domain, login,
+   ops-git names, scraping/mail tools, session id). Must be empty.
+   mirror-check.sh on the projection must report current.
+4. Commit, push; host side swaps ~/.claude/CLAUDE.md to two @imports
+   (projection from the local clone + private estate overlay).
+Blast Radius: this repo only (+ the host's own CLAUDE.md, outside the repo).
+Rollback: git revert; host: opsgit restore-safe ~/.claude/CLAUDE.md.
+
+[EXECUTED]
+  git add -- policy/projections/linux-posix.md policy/PLACEHOLDERS.md policy/AGENTS.master.md README.md
+  git diff --cached | grep -v '^-' | rg -n -i "$PAT"     # → no output (clean)
+  mirror-check.sh policy/projections/linux-posix.md        # → current (stamp v0.10 sha256:f53670c6)
+  git commit && git push origin master
+
+[RESULT]
+First rendered projection published. Drift rule: generic rules enter the
+master first, then the projection; the Windows projection (private repo)
+should follow the same split when next touched. pending/0003 (mirror /
+projection check) now has a real consumer.

@@ -104,3 +104,8 @@ policy/ in scratch AND in-repo — CLEAN. No new token classes were required.
 Follow-up (not done): adapt coding-rules `mirror-check.sh` to verify
 master <-> overlay <-> fleet-projection drift mechanically, turning the
 "matched semantic change in both files" habit into a script.
+
+2026-08-22: `projections/linux-posix.md` is the first rendered projection
+(imported on the origin Linux host via `@path` from `~/.claude/CLAUDE.md`
+next to a private estate overlay). Rule: generic text lands in the master
+first, then the projection — never edited on a host.

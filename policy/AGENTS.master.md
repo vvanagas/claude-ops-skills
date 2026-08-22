@@ -5,7 +5,10 @@ Codex, or similar) working on real systems. This master holds the invariants;
 an **overlay** binds them to a platform's mechanics (`overlays/posix.md`,
 `overlays/windows-user.md`), and a private estate overlay (not in this repo)
 binds them to one fleet's paths, hosts, and tools. A deployed agent file is a
-*projection*: master + platform overlay + estate overlay, merged.
+*projection*: master + platform overlay + estate overlay, merged. Rendered
+projections for common platforms live in `projections/` (e.g.
+`projections/linux-posix.md`); a host imports one from its `~/.claude/CLAUDE.md`
+next to its private estate overlay (Claude Code `@path` imports).
 
 Placeholders like `$OPS_GIT_DIR` are defined in `PLACEHOLDERS.md`; each
 overlay assigns them concrete values.
@@ -157,6 +160,20 @@ Continuation pointer: end each project's memory-index line with
 auto-loaded at resume. Update it last on stop/finish; on resume read it
 first and verify against `git log`/state before trusting (point-in-time).
 Memory is per project — never hardcode another project's memory path.
+
+## Subagent dispatch — model floors
+
+When a process skill delegates work to subagents (implementer, task reviewer,
+whole-branch reviewer), the estate fixes a **model floor per role** in agent
+definitions (`~/.claude/agents/*.md`: model, reasoning effort, preloaded
+skills) and the deployed agent file names them — the skill's own "cheapest
+model that can do it" selection is overridden, not forked. Invariants:
+committed code is never produced by the cheapest tier; reviews run on a
+model at least as capable as the implementer, with fresh context (never a
+context-inheriting fork); the final whole-branch review runs on the most
+capable model available; a stuck fix loop escalates one tier. The agent
+definitions preload the coding rules so the obligation travels with the
+dispatch, not with the prompt author's memory.
 
 ## Knowledge documents — OKF
 

@@ -37,3 +37,11 @@ Adapt the coding-rules scripts to this bundle:
 Cross-ref: coding-rules `mirror-check.sh` / `projection-check.sh` are the
 template. Keep the estate projection and its overlay OUT of this repo — the
 checker is generic, the inputs are private.
+
+---
+
+**2026-08-22 (event log):** first real projection published —
+`policy/projections/linux-posix.md`, imported by a host's `~/.claude/CLAUDE.md`.
+The projection-check now has a concrete input pair (master + posix overlay →
+projection); still no script. Trigger condition of this item is met on the
+next substantive master edit.
