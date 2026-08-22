@@ -520,3 +520,39 @@ rule or a type flag to make the same run pass is forbidden — the two look
 similar in a diff and are opposites in intent. Not done (candidate, separate
 repo): vvanagas/coding-rules could carry the same rule in its enforcement
 model, where "[auto] means a red checker IS the violation" already implies it.
+
+================================================================================
+#12 Execution-time rulings must be recorded in the project, not the scratch dir
+================================================================================
+
+[REQUEST]
+Operator, watching a subagent-driven run accumulate controller rulings:
+"those findings should be appended in a file next to docs and not lost with
+session. especially long term ones. agreed?"
+
+[PLAN]
+1. Master += rule under "Docs travel with the project": orchestrated
+   execution's ledger is scratch that gets DELETED at branch close, so any
+   ruling made on the operator's behalf dies with it; append each to a
+   tracked log (a decision bundle's reserved `log.md`) with trigger,
+   decision, cost-if-wrong; promote long-lived ones to numbered records.
+2. Projection: same, terse, naming `.superpowers/` and `docs/adr/log.md`.
+3. Reference implementation in git-push-gate (9ad8fc9): docs/adr/log.md,
+   208 lines, backfilled with all 12 rulings of Task 1 + accepted floors +
+   deferred minors + one instructive process error.
+Blast Radius: this repo; host policy text at next session. Rollback: revert.
+
+[EXECUTED]
+  perl -0pi -e '<insert before the pending/ backlog paragraph>' policy/AGENTS.master.md
+  perl -0pi -e '<same, terse>' policy/projections/linux-posix.md
+  git diff -- policy/ | grep '^+' | grep -v '^+++' | rg -n -i "$PAT"
+  # → no output, exit 1 = CLEAN
+  mirror-check.sh policy/projections/linux-posix.md
+  # → ok linux-posix.md (v0.10, 8 rules mirrored)
+
+[RESULT]
+Closes a real gap in the superpowers execution skill rather than in this
+estate's own habits: the skill's only safeguard for controller rulings is
+reciting them in a final chat message, which is precisely "lost with the
+session". The rule makes the tracked log the primary record and the recital
+a summary of it.

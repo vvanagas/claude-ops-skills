@@ -190,6 +190,18 @@ the container. Handling rules live in the repo's own
 `docs/task-records/README.md`. Public repos: decide at the first that uses
 SDD.
 
+**Decisions taken while executing a plan are recorded in the project, not in
+the execution scratch.** Orchestrated execution (subagent-driven or
+equivalent) keeps a working ledger in a scratch directory that is deleted
+when the branch closes, so any ruling the agent made on the operator's behalf
+— a conflict between plan and spec, a finding overridden, scope added or
+refused, a floor accepted — dies with it unless it is written somewhere
+tracked. Append each to a log that travels with the code (a decision-record
+bundle's reserved `log.md` is the natural home), with its trigger, the
+decision, and what it costs if wrong; promote the long-lived ones to numbered
+decision records. A ruling that survives only in the session transcript was
+a decision made in private.
+
 Live backlog: `pending/` — sibling of `docs/`, travels with it (same rule).
 One file per item with an explicit `state`/`trigger`/`owner`; a short
 `index.md` is the only surface read by default — detail enters context only

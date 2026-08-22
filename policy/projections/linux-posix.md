@@ -240,6 +240,15 @@ so an ignored record proves nothing and dies with the container. Handling
 rules live in the repo's own `docs/task-records/README.md`. Public repos:
 decide at the first that uses SDD.
 
+**Rulings made while executing a plan go in the project, not the scratch.**
+Subagent-driven execution keeps its ledger in `.superpowers/`, which is
+git-ignored and deleted at branch close — so every ruling taken on the
+operator's behalf (plan-vs-spec conflict, finding overridden, scope added or
+refused, floor accepted) dies with it unless it is tracked. Append each to
+`docs/adr/log.md` (OKF reserves `log.md` for exactly this) with trigger,
+decision, and cost-if-wrong; promote long-lived ones to numbered ADRs. A
+ruling that survives only in the transcript was made in private.
+
 Live backlog: `pending/` — sibling of `docs/`, travels with it (same rule).
 OKF bundle: one file per item, `type: Pending` + `state`/`trigger`/`owner`
 producer extensions; `index.md` (a dozen lines) is the only surface read by
