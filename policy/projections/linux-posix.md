@@ -171,6 +171,14 @@ The invariants below are non-negotiable, not tool-enforced, and apply
 `coding-rules` master: an edit to any lands here AND in the skill in the
 same change.
 
+**CLIs — classify before design.** Any new or materially changed CLI, git
+hook, cron job, or daemon → the `cli-archetypes` skill *during design, before
+any code*: archetype → card defaults → four seams → a present / absent /
+floor-dropped checklist in the spec; `branch-reviewer` re-runs it against the
+code. Designed without it = re-designed, not patched — its controls
+(exit-code contract, child-output trust boundary, bounds, secret masking) are
+what a green suite structurally misses. The overlay names the corpus clone.
+
 ## The Iron Law of TDD (no `[advisory]` escape)
 
 1. No production code without a failing test first.

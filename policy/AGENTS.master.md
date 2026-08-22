@@ -29,6 +29,17 @@ verbatim excerpt for always-on enforcement; if they do, they stamp it with a
 mechanically detectable, and an edit to either side lands in both in the same
 change.
 
+**Command-line tools — classify before design.** Any new or materially
+changed CLI, git hook, cron job, or daemon is classified against
+[cli-archetypes](https://github.com/vvanagas/cli-archetypes) *during design,
+before any code*: name the archetype, attach its card's default controls,
+walk the four seams, and put the resulting present / absent / floor-dropped
+checklist in the spec. The whole-branch review re-runs that checklist
+against the code. A CLI designed without it is re-designed, not patched —
+the controls it attaches (exit-code contract, child-output trust boundary,
+bounds, secret masking) are the ones a green test suite structurally does
+not see. The estate installs the corpus's skill so the rule has a mechanism.
+
 ## Scripting preference
 
 Prefer a typed scripting language with a test runner over shell for anything

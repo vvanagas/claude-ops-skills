@@ -435,3 +435,49 @@ done: the Windows "two shells, never mix idioms" rule would fit
 overlays/windows-user.md (offered, declined for this change). 0003's
 trigger has now fired once without a script; the manual gates above are
 the interim control.
+
+================================================================================
+#10 Master rule: command-line tools are classified against cli-archetypes at design time
+================================================================================
+
+[REQUEST]
+Operator, while designing a CLI in the same session: "each cli during design
+phase must refer to cli archetypes. Its crucial". Evidence in-session: four
+design sections were written before the corpus was read, and reading it
+changed the design materially (C25 masking, CR-6.6 bounds, a rollup policy,
+a fourth exit code, a self-audit test). The only prior mention in policy
+was the branch-reviewer's checklist — review time, after the code exists.
+
+[PLAN]
+1. Master `## Production code` += "Command-line tools — classify before
+   design": archetype → card defaults → four seams → present/absent/
+   floor-dropped checklist IN THE SPEC; branch review re-runs it; designed
+   without it = re-designed, not patched; the estate installs the skill so
+   the rule has a mechanism.
+2. Projection: same rule, terse, under "Production Code".
+3. Host side (outside this repo): install the corpus's own SKILL.md as a
+   personal skill with paths pointing at the clone; bind it in the estate
+   overlay; preload it in the three subagent definitions.
+4. Gate + mirror-check; commit; push (hand-swept — the push gate is the
+   project being designed).
+Blast Radius: this repo; the origin host's next-session policy text.
+Rollback: git revert.
+
+[EXECUTED]
+  perl -0pi -e '<insert after the coding-rules paragraph>' policy/AGENTS.master.md
+  perl -0pi -e '<insert after the mirror paragraph>' policy/projections/linux-posix.md
+  git diff -- policy/ | grep '^+' | grep -v '^+++' | rg -n -i "$PAT"
+  # → no output, exit 1 = CLEAN (estate + Windows identifier classes; the
+  #   public cli-archetypes file names dropped from the pattern — they had
+  #   false-positived on #9's follow-up sweep of the new project)
+  mirror-check.sh policy/projections/linux-posix.md
+  # → ok linux-posix.md (v0.10, 8 rules mirrored)
+  git add -- policy/AGENTS.master.md policy/projections/linux-posix.md history.txt docs/PROJECT_NOTES.md
+  git commit && git push origin master
+
+[RESULT]
+Rule lives in the master and the Linux projection; mechanism installed on
+the origin host (skill + overlay binding + agent preloads — all read at
+startup, verified next session). Windows projection follows when that file
+adopts the split. Follow-up candidate, not done: coding-rules §12 could
+point at cli-archetypes from its side (cross-repo; separate request).

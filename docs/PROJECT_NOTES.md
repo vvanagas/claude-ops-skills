@@ -121,3 +121,10 @@ master); the Windows file itself is unchanged and still monolithic — it
 becomes master + `overlays/windows-user.md` + a private estate overlay when
 next touched. Gate for a private-source fold: widen the forbidden-token
 pattern with the *source* estate's identifiers too, not just this host's.
+
+2026-08-22 (history.txt #10): master gained "command-line tools — classify
+before design" (cli-archetypes at design time, checklist in the spec,
+re-run at branch review). Triggered by a CLI designed in-session before the
+corpus was read. The rule's mechanism is host-side: the corpus's SKILL.md
+installed as a personal skill pointing at the clone, preloaded by the
+subagent definitions — a rule with no mechanism is literature.
