@@ -210,7 +210,11 @@ tracked. Append each to a log that travels with the code (a decision-record
 bundle's reserved `log.md` is the natural home), with its trigger, the
 decision, and what it costs if wrong; promote the long-lived ones to numbered
 decision records. A ruling that survives only in the session transcript was
-a decision made in private.
+a decision made in private. And when a ruling changes what a
+future task must DO, amend the plan or brief in the same action that records
+it: workers read the task text, never the decision log, so a ruling left only
+in the log depends on the orchestrator remembering it weeks later. The log
+keeps the why and the rejected alternatives; the plan carries the what.
 
 Live backlog: `pending/` — sibling of `docs/`, travels with it (same rule).
 One file per item with an explicit `state`/`trigger`/`owner`; a short

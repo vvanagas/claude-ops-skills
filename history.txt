@@ -601,3 +601,34 @@ otherwise be re-derived on every run (how to prove a check works, where the
 ledger entry goes, what counts as Minor). Agent definitions load at Claude
 Code startup, so the new blocks are live next session — dispatch prompts
 keep carrying them explicitly until then.
+
+================================================================================
+#14 A ruling that changes future work lands in the plan, not only the log
+================================================================================
+
+[REQUEST]
+Discovered during a subagent-driven run: an audit of the plan's task briefs
+found a ruling (use a token absent from the repo in a self-audit fixture)
+recorded in the project's decision log with status "open — applies when Task
+15 is implemented", while the plan text still carried the broken fixture. An
+implementer reads the brief extracted from the plan, never the log.
+
+[PLAN]
+Master + projection: extend the execution-rulings rule — when a ruling
+changes what a LATER task must DO, amend the plan/brief in the same action
+that records the ruling. Log keeps the why and the rejected alternatives;
+the plan carries the what.
+
+[EXECUTED]
+  perl -0pi -e '<extend the rulings paragraph>' policy/AGENTS.master.md
+  perl -0pi -e '<same, terse>' policy/projections/linux-posix.md
+  git diff -- policy/ | grep '^+' | grep -v '^+++' | rg -n -i "$PAT"
+  # → no output, exit 1 = CLEAN
+  mirror-check.sh policy/projections/linux-posix.md
+  # → ok linux-posix.md (v0.10, 8 rules mirrored)
+
+[RESULT]
+Completes #12's rule: that one made rulings survive the session; this one
+makes them reach the worker who must act on them. The failure mode it closes
+is specific — a decision correctly recorded, correctly reasoned, and
+delivered to nobody.

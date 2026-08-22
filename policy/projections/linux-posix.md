@@ -255,7 +255,10 @@ operator's behalf (plan-vs-spec conflict, finding overridden, scope added or
 refused, floor accepted) dies with it unless it is tracked. Append each to
 `docs/adr/log.md` (OKF reserves `log.md` for exactly this) with trigger,
 decision, and cost-if-wrong; promote long-lived ones to numbered ADRs. A
-ruling that survives only in the transcript was made in private.
+ruling that survives only in the transcript was made in private. A ruling that
+changes what a LATER task must do is also written into the plan/brief in the
+same action — implementers read the extracted brief, never `log.md`, so a
+ruling left only in the log rides on the controller's memory.
 
 Live backlog: `pending/` — sibling of `docs/`, travels with it (same rule).
 OKF bundle: one file per item, `type: Pending` + `state`/`trigger`/`owner`
