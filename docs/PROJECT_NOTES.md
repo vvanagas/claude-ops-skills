@@ -109,3 +109,15 @@ master <-> overlay <-> fleet-projection drift mechanically, turning the
 (imported on the origin Linux host via `@path` from `~/.claude/CLAUDE.md`
 next to a private estate overlay). Rule: generic text lands in the master
 first, then the projection — never edited on a host.
+
+2026-08-22 (history.txt #9): the Windows agent file (private `claude-config`)
+was diffed against the master and every *generic* rule it had that the master
+lacked was folded in — memory as the only auto-loaded surface (own
+subsection now), SDD task records tracked in private repos, mutation proof +
+green ≠ correct, stress-test-the-plan, format's cheap moment / unbound
+invariant, OKF enforcement-is-[review] + client conventions, dispatch
+sources-not-paraphrases, workspace hygiene. Direction is one-way (Windows →
+master); the Windows file itself is unchanged and still monolithic — it
+becomes master + `overlays/windows-user.md` + a private estate overlay when
+next touched. Gate for a private-source fold: widen the forbidden-token
+pattern with the *source* estate's identifiers too, not just this host's.

@@ -86,7 +86,9 @@ This host tracks config/code changes in a local-only ops git repo.
 
 Host config changes = ops-git above; this governs project work. New
 projects go under `$CODE_HOME/<project>`; the overlay lists any grandfathered
-project dirs elsewhere.
+project dirs elsewhere. Loose work artifacts (scripts, outputs, reports) go
+in `$CODE_HOME` subdirectories too — never `$HOME`, desktop or temp unless
+told; throwaway session scratch → `$SCRATCH`.
 
 1. **Git first.** `git init` + `.gitignore` at project start. Commit current
    state BEFORE implementing each request. Every message: what AND why.
@@ -94,7 +96,9 @@ project dirs elsewhere.
    files, expected outcome, **Blast Radius**, one-line rollback. Attended →
    present it and wait. Unattended → record in `history.txt` and proceed,
    EXCEPT destructive / prod-facing / IAM-firewall-deletion: always stop and
-   show the `--dry-run` command first.
+   show the `--dry-run` command first. **High cost of being wrong →
+   `grill-me` first** ([vvanagas/agent-skills](https://github.com/vvanagas/agent-skills)).
+   Reviews check work against the plan, never the plan against reality.
 3. **`history.txt` — mechanical ledger.** At project root, one entry per
    request: `#N title` · `[REQUEST]` · `[PLAN]` (steps, blast radius,
    rollback) · `[EXECUTED]` verbatim commands + `# → result` (never
@@ -103,15 +107,21 @@ project dirs elsewhere.
    future session would re-derive goes in `docs/PROJECT_NOTES.md`. Two
    files, two jobs — don't merge them.
 4. **Commit cadence.** One logical unit per commit; one request ≥ one
-   commit; never batch unrelated changes. Body = root-cause rationale, not
-   lines moved. Amend only pre-push, same logical unit, and say "amending".
+   commit; never batch unrelated changes; reference the `history.txt` entry
+   number where relevant. Body = root-cause rationale, not lines moved.
+   Amend only pre-push, same logical unit, and say "amending".
 5. **Ambiguity.** Attended → ASK before writing/committing. Unattended →
    least-surprising assumption, recorded in `[PLAN]` and flagged in the
    summary — a private, unrecorded resolution is unreviewable.
 6. **Canonical source before migrations.** Verify working copy matches
    deployed state (checksum / `git status`); on divergence record which is
    canonical and why in `[EXECUTED]`. Out-of-cycle hotfixes (ssh, scp)
-   create silent divergence; stale source wastes the whole migration.
+   create silent divergence; stale source wastes the whole migration. **A
+   format's cheap moment is before its first real write** — after that you
+   own a migration forever: land semantics changes ahead of first use; check
+   whether real data exists before assuming the window is still open. **An
+   unbound invariant is literature**: a rule with no gate binding it is not
+   a control yet — say so rather than filing it as done.
 7. **Session context.** Before migration/architecture/refactor work, read
    the infra config and the `history.txt`/`PROJECT_NOTES.md` entries
    covering the target — file state alone loses the why (OOM fixes, SSH
@@ -120,6 +130,11 @@ project dirs elsewhere.
    that proves it (`bun test`, `curl -I`, `systemctl is-active`). Service
    change → `[RESULT]` includes a healthy-startup log snippet. **Evidence
    before assertion**: "should work" is not a result; if not run, say so.
+   **A test that already passes proves nothing until you break what it
+   guards** — mutate, watch it fail, restore: RED covers new code; mutation
+   covers guards, gates and drift checks. **Green ≠ correct** when tests and
+   code share one misunderstanding — verify by deriving or executing the
+   claim, never by reading it back.
 9. **Housekeeping.** Temp scripts deleted or moved to `scripts/internal/`
    before the final commit. The secrets invariant covers `history.txt` too.
 
@@ -138,6 +153,8 @@ per Model Selection", use these instead — user instructions beat skill text:
 - **Never haiku** for any role. **Never `subagent_type: fork`** for plan
   execution (it inherits the controller's context and model; fresh eyes are the
   point of the review seats).
+- Give reviewers sources, not paraphrases. A dispatch outside these
+  definitions names its model explicitly — omitted inherits the session's.
 - The agent bodies preload `coding-rules` (`skills:`) and say which binding to
   read; the dispatch prompt still pastes the plan's Global Constraints.
 - Set because the skill's default routed "mechanical" tasks to the cheapest
@@ -194,6 +211,12 @@ the code alone, e.g. when migrating to another host/repo). Keep them true to the
 code: a change that invalidates a spec/ADR statement updates the doc **in the
 same change**, not later. Docs follow code.
 
+**Private repo → SDD task records are tracked** (superpowers ignores and
+deletes them by default; override it). CR-3 puts the captured RED/GREEN there,
+so an ignored record proves nothing and dies with the container. Handling
+rules live in the repo's own `docs/task-records/README.md`. Public repos:
+decide at the first that uses SDD.
+
 Live backlog: `pending/` — sibling of `docs/`, travels with it (same rule).
 OKF bundle: one file per item, `type: Pending` + `state`/`trigger`/`owner`
 producer extensions; `index.md` (a dozen lines) is the only surface read by
@@ -208,16 +231,24 @@ Substantial project work (multi-task; investigations with non-obvious findings;
 anything a future session would re-derive) → record keypoints (decisions,
 live/infra findings, gotchas, open follow-ups) in ONE evolving project note
 (`docs/PROJECT_NOTES.md`; lives in-project per "Docs travel with the
-project") — update it, don't spawn dated files. MUST add/refresh a `MEMORY.md`
-pointer: `docs/` isn't auto-loaded, memory is the only discovery path. Skip
-trivial one-offs. Complements /ctx-save (resume state) + /ctx-retro (retros);
-don't duplicate. Memory is per project (`~/.claude/projects/<slug>/memory/`)
-— never hardcode another project's dir.
+project") — update it, don't spawn dated files. Skip trivial one-offs;
+coverage is not value. It records *what was learned and decided*, where
+`history.txt` records *what ran*. Complements /ctx-save (resume state) +
+/ctx-retro (retros); don't duplicate.
 
-Continuation pointer: end each project's `MEMORY.md` line with
-`⏸ NEXT: <one action | "Complete — nothing pending">` — the only surface
-auto-loaded at resume. Update it last on stop/finish; on resume read it first
-and verify vs `git log`/state before trusting (point-in-time).
+### Memory — the only auto-loaded surface
+
+`docs/` isn't auto-loaded; memory is the sole discovery path at resume, so
+every project-note change MUST add/refresh the project's `MEMORY.md` line.
+Memory is **per project**: `~/.claude/projects/<slug>/memory/`, `<slug>`
+derived from the project path by the harness. **Never hardcode one project's
+dir** — the session's own instructions name the current one; a pointer written
+into another project's memory is a pointer nobody will ever find.
+
+End each project's `MEMORY.md` line with a continuation pointer —
+`⏸ NEXT: <one action | "Complete — nothing pending">`. Update it last on
+stop/finish; on resume read it first and verify vs `git log`/state before
+trusting it (point-in-time; can be stale).
 
 # Knowledge documents — OKF
 
@@ -233,8 +264,12 @@ these fields too. Full bundle (concept-per-file, reserved `index.md`/`log.md`)
 for **new knowledge dirs only** — never retrofit existing naming. Exempt: this
 file; skill-owned artifacts (the skill's format wins — a conflict is a defect
 in the skill); append-only ledgers (`history.txt`, `$NARRATIVE_LOG`); code and
-config. Enforcement is `[review]` until a mechanical check exists. Pin the
-spec version in the bundle's root `index.md` (v0.1→v0.2 broke in six weeks).
+config. On a client project with its own documentation conventions, theirs
+win — record that once, don't argue per file. **Enforcement is `[review]`
+until a mechanical check exists** (every file in a knowledge dir has `type`;
+no `stale_after` has passed) — a compulsory rule with nothing checking it is
+policy without mechanism. Pin the spec version in the bundle's root
+`index.md` (v0.1→v0.2 broke in six weeks).
 
 ## Web research
 

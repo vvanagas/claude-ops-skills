@@ -361,3 +361,77 @@ First rendered projection published. Drift rule: generic rules enter the
 master first, then the projection; the Windows projection (private repo)
 should follow the same split when next touched. pending/0003 (mirror /
 projection check) now has a real consumer.
+
+================================================================================
+#9  Fold the Windows agent file's generic sections into the master (+ projection)
+================================================================================
+
+[REQUEST]
+Carried-forward item from the 2026-08-22 session context: "Windows
+claude-config/CLAUDE.md has sections the master lacks (memory surface, SDD
+records) — fold into the master when next touched." Operator: do it now;
+scope widened to every generic rule the diff finds (all nine), 0003 trigger
+logged rather than building the checker first.
+
+[PLAN]
+1. Diff the Windows agent file (private repo, fetched read-only via gh API
+   into scratch) against policy/AGENTS.master.md. Classify each gap: generic
+   → master; estate-specific (workspace root, corpus/catalog names, tool
+   inventory) → stays out, for that estate's private overlay.
+2. Fold the generic gaps into the master's existing sections: workspace
+   hygiene (intro of Workflow protocol); §2 stress-test-the-plan / reviews
+   check work against the plan; §4 reference the ledger entry; §6 format's
+   cheap moment + unbound invariant is literature; §8 mutation proof +
+   green ≠ correct; Docs travel += SDD task records tracked in private
+   repos; Durable session capture split → new "### Memory — the only
+   auto-loaded surface"; Subagent dispatch += name the model / sources not
+   paraphrases; OKF += client conventions win + enforcement is [review]
+   (that last line was already in the projection but not the master —
+   reverse drift, closed here).
+3. Re-render projections/linux-posix.md with the same nine additions in its
+   terse style (master first → projection). coding-rules mirror block and
+   its stamp untouched.
+4. Gates: forbidden-token sweep over the ADDED lines of the diff — pattern =
+   host-side estate identifiers PLUS the Windows file's own (login,
+   workspace root, corpus/catalog names) since the source is a private
+   file; coding-rules mirror-check.sh on the projection.
+5. pending/0003: event line (trigger fired; gates used instead; no script).
+   PROJECT_NOTES §6 addendum. One commit, push.
+Blast Radius: this repo; the origin Linux host's next-session global policy
+text (its ~/.claude/CLAUDE.md @imports the projection from the clone). No
+running service, no host config file edited. Windows file NOT touched
+(one-way fold, Windows → master).
+Rollback: git revert <this commit> && git push origin master.
+
+[EXECUTED]
+  gh api repos/vvanagas/claude-config/contents/CLAUDE.md --jq .content | base64 -d > $SCRATCH/claude-config/CLAUDE.md
+  # → 298 lines (last commit 317c886, 2026-08-04); repo visibility PRIVATE
+  bun run $SCRATCH/fold-policy.ts     # anchored find/replace; aborts unless each anchor matches exactly once
+  # → policy/AGENTS.master.md: 9 edits applied
+  # → policy/projections/linux-posix.md: 9 edits applied
+  git diff --stat
+  # → AGENTS.master.md +73/-?  linux-posix.md +67/-?  (107 insertions, 33 deletions)
+  # THE GATE — added lines only, estate + Windows identifier classes
+  PAT='<forbidden-token alternation — NOT reproduced here; classes: host name,
+        home path, login, internal domain, ops-git names, scraping/mail tools,
+        session ids, Windows login, Windows workspace root, corpus/catalog names>'
+  git diff -- policy/ | grep '^+' | grep -v '^+++' | rg -n -i "$PAT"
+  # → no output, exit 1 = CLEAN
+  mirror-check.sh policy/projections/linux-posix.md
+  # → ok linux-posix.md (v0.10, 8 rules mirrored)   [stamp sha256:f53670c6 unchanged]
+  grep -n '^#' policy/projections/linux-posix.md
+  # → heading tree intact; new "### Memory" nests under "## Durable session capture"
+  git add -- policy/AGENTS.master.md policy/projections/linux-posix.md history.txt docs/PROJECT_NOTES.md pending/0003-policy-mirror-check.md
+  git commit && git push origin master
+
+[RESULT]
+Master now carries every generic rule the Windows file had that it lacked;
+the Linux projection is re-rendered from it, and the one rule the projection
+had ahead of the master (OKF enforcement is [review]) is back under the
+master's authority. Estate-specific Windows content (workspace root,
+corpus/catalog citation rule, tool list) deliberately not folded — it is that
+estate's private-overlay material once claude-config adopts the split. Not
+done: the Windows "two shells, never mix idioms" rule would fit
+overlays/windows-user.md (offered, declined for this change). 0003's
+trigger has now fired once without a script; the manual gates above are
+the interim control.

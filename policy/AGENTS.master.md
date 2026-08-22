@@ -79,7 +79,10 @@ Both required.**
 
 Host-config changes follow ops-git above; this governs project work.
 Projects live one-per-directory under `$CODE_HOME` (git + tests + docs
-inside).
+inside). Loose work artifacts (scripts, outputs, reports) go in
+subdirectories of `$CODE_HOME` too — never the home directory, desktop, or
+a temp dir unless told otherwise. Genuinely throwaway session scratch goes
+to `$SCRATCH`, not the workspace.
 
 1. **Git first.** `git init` + `.gitignore` at project start. Establish a
    scoped pre-change baseline before implementing each request; never absorb
@@ -89,7 +92,10 @@ inside).
    files, expected outcome, **Blast Radius**, one-line rollback. Attended →
    present it and wait. Unattended → record it in `history.txt` and proceed,
    EXCEPT destructive / production-facing / access-control work: always stop
-   and show the dry-run form first.
+   and show the dry-run form first. **High cost of being wrong → stress-test
+   the plan first** (a `grill-me`-style interrogation; see
+   [vvanagas/agent-skills](https://github.com/vvanagas/agent-skills)).
+   Reviews check work against the plan, never the plan against reality.
 3. **`history.txt` — mechanical ledger.** At project root, one entry per
    request: `#N title` · `[REQUEST]` · `[PLAN]` (steps, blast radius,
    rollback) · `[EXECUTED]` verbatim commands + `# → result` (never
@@ -97,15 +103,21 @@ inside).
    commit together with it. It records *what ran*; the *why* a future session
    would re-derive goes in `docs/PROJECT_NOTES.md`. Two files, two jobs.
 4. **Commit cadence.** One logical unit per commit; one request ≥ one commit;
-   never batch unrelated changes. Body = root-cause rationale, not lines
-   moved. Amend only pre-push, same logical unit, and say "amending".
+   never batch unrelated changes; reference the `history.txt` entry number
+   where relevant. Body = root-cause rationale, not lines moved. Amend only
+   pre-push, same logical unit, and say "amending".
 5. **Ambiguity.** Attended → ask before writing or committing. Unattended →
    least-surprising assumption, recorded in `[PLAN]` and flagged in the
    summary — a private, unrecorded resolution is unreviewable.
 6. **Canonical source before migrations.** Verify the working copy matches
    deployed state (checksum / `git status`); on divergence record which is
    canonical and why in `[EXECUTED]`. Out-of-cycle hotfixes create silent
-   divergence; stale source wastes the whole migration.
+   divergence; stale source wastes the whole migration. **A format's cheap
+   moment is before its first real write** — after that you own a migration
+   forever: land semantics changes ahead of first use, and check whether real
+   data already exists before assuming the window is still open. **An
+   unbound invariant is literature**: a rule with no gate binding it is not a
+   control yet — say so rather than filing it as done.
 7. **Session context.** Before migration, architecture, or refactor work,
    read the infra config and the `history.txt`/`PROJECT_NOTES.md` entries
    covering the target — file state alone loses the why.
@@ -113,6 +125,11 @@ inside).
    that proves it (test run, HTTP probe, service/process check). A service
    change's `[RESULT]` includes a healthy-startup log snippet. **Evidence
    before assertion**: "should work" is not a result; if not run, say so.
+   **A test that already passes proves nothing until you break what it
+   guards** — mutate, watch it fail, restore: RED covers new code; mutation
+   covers guards, gates and drift checks. **Green ≠ correct** when tests and
+   code share one misunderstanding — verify a claim by deriving or executing
+   it, never by reading it back.
 9. **Housekeeping.** Temp scripts deleted or moved to `scripts/internal/`
    before the final commit. The secrets invariant covers `history.txt` too.
 
@@ -138,6 +155,13 @@ directory **inside the project** and move as one unit *with* the code (never
 the code alone). A change that invalidates a spec/ADR statement updates the
 doc **in the same change**, not later.
 
+**Private repo → SDD task records are tracked.** Subagent-driven development
+ignores and deletes its task records by default; override it. The captured
+RED/GREEN runs live there, so an ignored record proves nothing and dies with
+the container. Handling rules live in the repo's own
+`docs/task-records/README.md`. Public repos: decide at the first that uses
+SDD.
+
 Live backlog: `pending/` — sibling of `docs/`, travels with it (same rule).
 One file per item with an explicit `state`/`trigger`/`owner`; a short
 `index.md` is the only surface read by default — detail enters context only
@@ -151,15 +175,24 @@ Substantial project work (multi-task; investigations with non-obvious
 findings; anything a future session would re-derive) → record keypoints
 (decisions, live findings, gotchas, open follow-ups) in ONE evolving
 project note (`docs/PROJECT_NOTES.md`) — update it, don't spawn dated files.
-Add/refresh a pointer in the agent's persistent memory index: project docs
-are not auto-loaded; memory is the only discovery path. Skip trivial
-one-offs.
+Skip trivial one-offs; coverage is not value. It records *what was learned
+and decided*, where `history.txt` records *what ran*.
 
-Continuation pointer: end each project's memory-index line with
-`⏸ NEXT: <one action | "Complete — nothing pending">` — the only surface
-auto-loaded at resume. Update it last on stop/finish; on resume read it
-first and verify against `git log`/state before trusting (point-in-time).
-Memory is per project — never hardcode another project's memory path.
+### Memory — the only auto-loaded surface
+
+`docs/` is not auto-loaded; the agent's persistent memory is the sole
+discovery path at resume, so every project-note change also refreshes the
+project's line in the memory index. Memory is **per project** — Claude Code,
+for one, keys it as `~/.claude/projects/<slug>/memory/`, with `<slug>`
+derived from the project path by the harness. **Never hardcode one project's
+directory**: the session's own instructions name the current one, and a
+pointer written into another project's memory is a pointer nobody will ever
+find.
+
+End each project's memory-index line with a continuation pointer —
+`⏸ NEXT: <one action | "Complete — nothing pending">`. Update it last on
+stop/finish; on resume read it first and verify against `git log`/state
+before trusting it (point-in-time; can be stale).
 
 ## Subagent dispatch — model floors
 
@@ -173,7 +206,9 @@ model at least as capable as the implementer, with fresh context (never a
 context-inheriting fork); the final whole-branch review runs on the most
 capable model available; a stuck fix loop escalates one tier. The agent
 definitions preload the coding rules so the obligation travels with the
-dispatch, not with the prompt author's memory.
+dispatch, not with the prompt author's memory. Where no agent definition
+fixes the model, name it on every dispatch — omitted inherits the session's.
+Give reviewers sources, not paraphrases.
 
 ## Knowledge documents — OKF
 
@@ -188,9 +223,13 @@ is a script comparison, not a habit. Full bundle (concept-per-file, reserved
 `index.md`/`log.md`) for **new knowledge dirs only** — never retrofit
 existing naming. Exempt: agent policy files; skill-owned artifacts (the
 skill's format wins — a conflict is a defect in the skill); append-only
-ledgers (`history.txt`, `$NARRATIVE_LOG`); code and config. Pin the spec
-version in a bundle's root `index.md` (minor spec versions have broken
-compatibility within weeks).
+ledgers (`history.txt`, `$NARRATIVE_LOG`); code and config. On a client
+project with its own documentation conventions, theirs win — record that
+once, don't argue per file. **Enforcement is `[review]` until a mechanical
+check exists** (every file in a knowledge dir has `type`; no `stale_after`
+has passed) — a compulsory rule with nothing checking it is policy without
+mechanism. Pin the spec version in a bundle's root `index.md` (minor spec
+versions have broken compatibility within weeks).
 
 ## Web research
 

@@ -45,3 +45,11 @@ checker is generic, the inputs are private.
 The projection-check now has a concrete input pair (master + posix overlay →
 projection); still no script. Trigger condition of this item is met on the
 next substantive master edit.
+
+**2026-08-22 (event log, history.txt #9):** trigger fired — first substantive
+master edit (nine generic rules folded in from the Windows agent file) with
+the projection re-rendered by hand. Still no policy checker; interim control
+was the forbidden-token sweep over added lines plus the coding-rules
+`mirror-check.sh` on the projection's mirror block. One drift this edit
+closed by eye would have been a finding for the projection-check: the
+projection carried "OKF enforcement is [review]" before the master did.
