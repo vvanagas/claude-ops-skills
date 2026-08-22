@@ -264,6 +264,41 @@ dispatch, not with the prompt author's memory. Where no agent definition
 fixes the model, name it on every dispatch — omitted inherits the session's.
 Give reviewers sources, not paraphrases.
 
+## Orchestrating an execution run
+
+When you drive a written plan through worker agents, you are not a passive
+router: the run's failures are yours to catch, and the ones you catch are
+worth more written down than remembered. Standing duties, learned from runs
+where each was discovered mid-flight:
+
+- **Do not write to the repository while a worker is writing in it.** A bare
+  `git commit` commits the whole index, not only the paths you added, so a
+  controller commit lands whatever a worker had staged, under the wrong
+  message. Queue your documentation edits and land them between tasks; when
+  you must commit alongside live work, restrict it with an explicit pathspec
+  (`git commit -- <paths>`). Read-only reviewers are not affected.
+- **Audit the plan's test fixtures before dispatching, not per task.** For
+  every fixture ask: does it actually put the code into the state its
+  assertion names? A fixture that cannot reach the path its test is named for
+  asserts nothing and reads as coverage. Check by computation — split the
+  string, run the regex, re-derive the arithmetic — never by eye.
+- **Carry each task's review findings into the NEXT dispatch.** A finding
+  that cost one task a fix round should cost the next task nothing. If two
+  consecutive tasks are sent back for the same reason, the dispatch is the
+  defect, not the worker.
+- **Ask each reviewer the one question its inputs cannot answer.** The brief
+  states what to build; it cannot say whether the design is right. Name the
+  specific doubt — the case you suspect is unhandled, the scope you think is
+  wrong — and ask for a plain answer.
+- **Verify a decisive claim yourself before acting on it**, whichever
+  direction it points. A reviewer's finding that would change a spec, and a
+  worker's report that a requirement is impossible, both deserve one
+  independent probe. Cheap, and it is the difference between rulings and
+  guesses.
+- **A worker that reports its own error is doing the job.** Say so, record
+  the lesson where the next worker will read it, and never let the honest
+  report cost more than the silent one would have.
+
 ## Knowledge documents — OKF
 
 [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)

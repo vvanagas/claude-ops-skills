@@ -632,3 +632,45 @@ Completes #12's rule: that one made rulings survive the session; this one
 makes them reach the worker who must act on them. The failure mode it closes
 is specific — a decision correctly recorded, correctly reasoned, and
 delivered to nobody.
+
+================================================================================
+#15 The self-healing pattern applied to the ORCHESTRATOR, not only the workers
+================================================================================
+
+[REQUEST]
+Operator: "everything globally applicable must remain written. and this self
+learning/healing pattern in superpowers must be written for orchestrator as
+well. agreed? already done?" — Honest answer at the time: agreed, and NO. The
+implementer and task-reviewer definitions had gained standing rules from the
+run's findings; the orchestrator had gained none, and its own mistakes were
+being fixed in-session and forgotten.
+
+[PLAN]
+1. Master += "## Orchestrating an execution run": six standing duties, each
+   from a failure observed in one run — do not write to the repo while a
+   worker writes in it (a bare `git commit` commits the whole index, so a
+   controller commit swallows the worker's staged files under the wrong
+   message); audit the plan's fixtures before Task 1 by computation; carry
+   each task's findings into the next dispatch (the same finding twice means
+   the dispatch is the defect); ask each reviewer the one question its inputs
+   cannot answer; verify a decisive claim yourself in either direction; a
+   worker reporting its own error is doing the job.
+2. Projection: same, terse, naming the concrete host mechanisms.
+3. implementer.md += "you are not alone in the repo" (what to do when a
+   concurrent commit swallows your staged files).
+
+[EXECUTED]
+  perl -0pi -e '<insert before Knowledge documents>' policy/AGENTS.master.md
+  perl -0pi -e '<same, terse>' policy/projections/linux-posix.md
+  perl -0pi -e '<insert into standing rules>' ~/.claude/agents/implementer.md
+  git diff -- policy/ | grep '^+' | grep -v '^+++' | rg -n -i "$PAT"
+  # → no output, exit 1 = CLEAN
+  mirror-check.sh policy/projections/linux-posix.md
+  # → ok linux-posix.md (v0.10, 8 rules mirrored)
+
+[RESULT]
+The asymmetry this closes was real and self-serving: worker mistakes became
+permanent rules within minutes, while the orchestrator's became a sentence in
+a session that ends. The triggering instance is in the text — a controller
+commit that swallowed an implementer's staged files, caught and reported by
+the implementer rather than by the controller who caused it.

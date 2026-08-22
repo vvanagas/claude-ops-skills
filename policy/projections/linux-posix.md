@@ -293,6 +293,31 @@ End each project's `MEMORY.md` line with a continuation pointer —
 stop/finish; on resume read it first and verify vs `git log`/state before
 trusting it (point-in-time; can be stale).
 
+# Orchestrating an execution run (subagent-driven)
+
+Driving a plan through worker agents makes the run's failures yours to catch,
+and what you catch is worth writing down rather than remembering:
+
+- **Never write to the repo while an implementer is writing in it.** A bare
+  `git commit` commits the WHOLE index, not just the paths you added — a
+  controller commit will swallow the worker's staged files under your message.
+  Queue doc edits between tasks; if you must commit alongside live work, use
+  `git commit -- <paths>`. Read-only reviewers are unaffected.
+- **Audit the plan's fixtures before Task 1, by computation not by eye.** For
+  each: does it put the code into the state its assertion names? A fixture
+  that cannot reach the path its test is named for asserts nothing and reads
+  as coverage in review.
+- **Carry each task's findings into the NEXT dispatch.** The same finding
+  twice means the dispatch is the defect, not the worker.
+- **Ask every reviewer the one question its inputs cannot answer** — the
+  design doubt the brief cannot express. Name the specific case you suspect.
+- **Verify a decisive claim yourself before acting**, in either direction: a
+  finding that would change the spec, or a report that a requirement is
+  impossible. One probe separates a ruling from a guess.
+- **A worker reporting its own error is doing the job** — record the lesson
+  where the next worker reads it (`~/.claude/agents/*.md`), never make the
+  honest report cost more than silence would have.
+
 # Knowledge documents — OKF
 
 [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
